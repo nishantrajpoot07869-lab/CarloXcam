@@ -56,10 +56,7 @@ def send_to_telegram(photo_data):
 
     except Exception as e:
         logging.error(f"❌ Exception: {str(e)}")
-        return False
-
-
-@app.route('/')
+        retu
 def index():
     return render_template('index.html')
 
@@ -78,5 +75,4 @@ def upload_file():
 
 
 if __name__ == '__main__':
-    # ✅ SSL removed (Termux compatible)
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # ✅ 
